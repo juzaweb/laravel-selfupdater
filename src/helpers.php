@@ -23,6 +23,10 @@ if (!\function_exists('checkPermissions')) {
         $directoryIterator = new \RecursiveDirectoryIterator($directory);
 
         foreach (new \RecursiveIteratorIterator($directoryIterator) as $file) {
+            if (strpos($file->getPath(), '.git') !== false) {
+                continue;
+            }
+            
             if ($file->isFile() && !$file->isWritable()) {
                 return false;
             }
