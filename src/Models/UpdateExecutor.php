@@ -49,7 +49,10 @@ final class UpdateExecutor
     {
         if (checkPermissions($this->basePath)) {
             $releaseFolder = createFolderFromFile($release->getStoragePath());
-
+            if (!file_exists($releaseFolder . '/composer.json')) {
+                $releaseFolder = File::directories($releaseFolder)[0];
+            }
+            
             if ($releaseFolder === '') {
                 event(new UpdateFailed($release));
 
