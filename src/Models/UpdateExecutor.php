@@ -49,7 +49,11 @@ final class UpdateExecutor
     {
         if (checkPermissions($this->basePath)) {
             $releaseFolder = createFolderFromFile($release->getStoragePath());
-
+            $baseFolder = $releaseFolder;
+            if (!file_exists($releaseFolder . '/composer.json')) {
+                $releaseFolder = File::directories($releaseFolder)[0];
+            }
+            
             if ($releaseFolder === '') {
                 event(new UpdateFailed($release));
 
@@ -63,7 +67,7 @@ final class UpdateExecutor
             $this->moveFiles($releaseFolder);
 
             // Delete the folder from the update
-            File::deleteDirectory($releaseFolder);
+            File::deleteDirectory($baseFolder);
 
             // Delete the version file
             $this->deleteVersionFile();
